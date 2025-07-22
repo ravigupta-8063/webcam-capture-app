@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Webcam Photo Capture</title>
+  <style>
+    video, canvas, button {
+      display: block;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <video id="video" width="320" height="240" autoplay></video>
+  <button onclick="takePhoto()">📸 Capture Photo</button>
+  <canvas id="canvas" width="320" height="240"></canvas>
+  <button onclick="downloadPhoto()">💾 Download Photo</button>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    // 🔹 Access user's webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error("Webcam access error:", err);
+      });
+
+    // 🔸 Capture photo to canvas
+    function takePhoto() {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    }
+
+    // 💾 Trigger download of canvas image
+    function downloadPhoto() {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'ravi_capture.png';
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
